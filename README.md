@@ -1,40 +1,54 @@
 # Maven Dependency Graph
 
-Инструмент визуализации графа зависимостей для пакетов Maven (Java).
+Инструмент визуализации графа зависимостей
+для пакетов Maven (Java). Вариант №18.
 
-## Требования
+## 1. Общее описание
 
-- Python 3.10+
+CLI-приложение получает информацию о
+прямых зависимостях заданного Maven-пакета
+из репозитория по HTTP и выводит её на
+экран. Готовые менеджеры пакетов не
+используются — POM-файлы загружаются и
+парсятся самостоятельно через стандартные
+модули Python (`urllib`, `xml.etree`).
 
-## Запуск
+На текущем этапе (Этап 2) реализован сбор
+только прямых зависимостей одного пакета.
 
-### Интерактивный режим
+## 2. Описание функций и настроек
 
-```bash
-python -m src.main --package org.springframework:spring-core
-```
+### Параметры командной строки
 
-### С параметрами
+| Параметр | Описание |
+|----------|----------|
+| `--package` | Имя пакета (groupId:artifactId) |
+| `--repo-url` | URL Maven-репозитория |
+| `--test-mode` | Режим тестового репозитория |
+| `--test-file` | Путь к тестовому POM-файлу |
+| `--output-file` | Имя файла изображения |
+| `--ascii-tree` | Вывод в виде ASCII-дерева |
+| `--filter` | Подстрока для фильтрации |
+
+### Модули проекта
+
+- `src/config.py` — разбор аргументов
+- `src/maven_parser.py` — парсинг POM
+- `src/dependency_fetcher.py` — HTTP-запросы
+- `src/main.py` — точка входа
+
+## 3. Команды для сборки и тестов
+
+### Запуск
+
 ```bash
 python -m src.main \
-  --package org.springframework:spring-core \
-  --repo-url https://repo1.maven.org/maven2 \
-  --ascii-tree \
-  --output-file graph.png
-```
-
-### В тестовом режиме
-```bash
-python -m src.main \
-  --package com.example:my-app \
-  --test-mode \
-  --test-file test_data/test_pom.xml \
+  --package com.google.guava:guava \
   --ascii-tree
 ```
 
-### С фильтрацией
+### Тесты
+
 ```bash
-python -m src.main \
-  --package org.springframework:spring-core \
-  --filter test
+python -m unittest tests/test_maven.py -v
 ```
