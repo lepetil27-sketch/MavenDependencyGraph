@@ -1,6 +1,24 @@
 import argparse
 import os
-import sys
+
+
+_ARGS_CONFIG = [
+    ("--package", {"type": str, "required": True,
+     "help": "Имя пакета (groupId:artifactId)"}),
+    ("--repo-url", {"type": str,
+     "default": "https://repo1.maven.org/maven2",
+     "help": "URL Maven-репозитория"}),
+    ("--test-mode", {"action": "store_true",
+     "help": "Режим тестового репозитория"}),
+    ("--test-file", {"type": str, "default": None,
+     "help": "Путь к файлу тестового репозитория"}),
+    ("--output-file", {"type": str, "default": "graph.png",
+     "help": "Имя файла изображения графа"}),
+    ("--ascii-tree", {"action": "store_true",
+     "help": "Вывод в формате ASCII-дерева"}),
+    ("--filter", {"type": str, "default": None,
+     "help": "Подстрока для фильтрации пакетов"}),
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -9,57 +27,8 @@ def parse_args() -> argparse.Namespace:
                     "зависимостей Maven"
     )
 
-    parser.add_argument(
-        "--package",
-        type=str,
-        required=True,
-        help="Имя пакета в формате "
-             "groupId:artifactId"
-    )
-
-    parser.add_argument(
-        "--repo-url",
-        type=str,
-        default="https://repo1.maven.org/maven2",
-        help="URL Maven-репозитория"
-    )
-
-    parser.add_argument(
-        "--test-mode",
-        action="store_true",
-        help="Режим работы с тестовым "
-             "репозиторием"
-    )
-
-    parser.add_argument(
-        "--test-file",
-        type=str,
-        default=None,
-        help="Путь к файлу тестового "
-             "репозитория"
-    )
-
-    parser.add_argument(
-        "--output-file",
-        type=str,
-        default="graph.png",
-        help="Имя файла с изображением "
-             "графа"
-    )
-
-    parser.add_argument(
-        "--ascii-tree",
-        action="store_true",
-        help="Вывод в формате ASCII-дерева"
-    )
-
-    parser.add_argument(
-        "--filter",
-        type=str,
-        default=None,
-        help="Подстрока для фильтрации "
-             "пакетов"
-    )
+    for name, kwargs in _ARGS_CONFIG:
+        parser.add_argument(name, **kwargs)
 
     return parser.parse_args()
 

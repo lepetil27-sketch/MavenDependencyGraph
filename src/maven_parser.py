@@ -48,7 +48,6 @@ def parse_pom(pom_content: str
                     gid, aid, resolved
                 )
             )
-
     return dependencies
 
 
